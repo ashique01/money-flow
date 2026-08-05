@@ -29,6 +29,26 @@ async function handleLogin(request: NextRequest) {
   }
 }
 
+// Mock dashboard handler – returns static data for dev
+function handleDashboard(_request: NextRequest) {
+  const mockData = {
+    period: "month",
+    accounts: [
+      { name: "Checking", type: "Bank", balance: 1234.56, currency: "USD" },
+      { name: "Savings", type: "Bank", balance: 9876.54, currency: "USD" },
+    ],
+    summary: { balance: 11111.1, income: 5000, expense: 3000, savingRate: 0.4 },
+    monthly: { income: 5000, expense: 3000 },
+    categories: [
+      { name: "Food", amount: 800 },
+      { name: "Rent", amount: 1200 },
+    ],
+    people: { "John Doe": 200 },
+    recentTransactions: [],
+  };
+  return NextResponse.json({ success: true, data: mockData }, { status: 200 });
+}
+
 export async function GET(request: NextRequest) {
   const action = request.nextUrl.searchParams.get('action');
   if (!action) {
@@ -37,6 +57,9 @@ export async function GET(request: NextRequest) {
   if (action === 'login') {
     // Login is POST‑only, but handle GET gracefully.
     return handleLogin(request);
+  }
+  if (action === 'dashboard') {
+    return handleDashboard(request);
   }
   // Forward all other GET actions to the Google Apps Script proxy.
   return googleGET(request);
