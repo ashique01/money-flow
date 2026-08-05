@@ -1,5 +1,6 @@
 // src/app/api/analytics/summary/route.ts
-import { GET as googleGET } from "../google/route";
+import { NextRequest } from "next/server";
+import { GET as googleGET } from "@/app/api/google/route";
 
 /**
  * Forward analytics summary requests to the generic Google Apps Script proxy.
@@ -7,17 +8,10 @@ import { GET as googleGET } from "../google/route";
  * using the `action` parameter. Here we simply set `action=analytics/summary` so the
  * Apps Script backend can handle it, then delegate to the existing Google proxy.
  */
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   // Append the proper action for the backend.
-  const url = new URL(request.url);
+  const url = request.nextUrl;
   url.searchParams.set("action", "analytics/summary");
-  // Re‑create a Request object with the modified URL so the Google proxy sees it.
-  const proxiedRequest = new Request(url.toString(), {
-    method: request.method,
-    headers: request.headers,
-    body: request.body,
-    // Preserve credentials, cache, etc. – defaults are fine for our use‑case.
-  });
-  // Delegate to the Google proxy which will handle key injection and error handling.
-  return googleGET(proxiedRequest);
+  // Delegate directly to the Google proxy; it will handle key injection and response.
+  return googleGET(request);
 }
