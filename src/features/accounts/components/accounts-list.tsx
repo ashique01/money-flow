@@ -21,13 +21,21 @@ export default function AccountsList() {
   const { data = [], isLoading, error } = useAccounts(email);
 
   const [createOpen, setCreateOpen] = useState(false);
-  // Pagination managed by usePagination hook
 
   const [editingAccount, setEditingAccount] = useState<Account | null>(null);
 
   const [editOpen, setEditOpen] = useState(false);
 
   const [deletingAccount, setDeletingAccount] = useState<Account | null>(null);
+
+  const pageSize = 10;
+
+  const {
+    page,
+    setPage,
+    pageCount,
+    pagedItems: pagedData,
+  } = usePagination(data, pageSize);
 
   if (isLoading) {
     return (
@@ -48,7 +56,13 @@ export default function AccountsList() {
   }
 
   if (error) {
-    return <ErrorBox message={(error as Error).message} />;
+    return (
+      <ErrorBox
+        message={
+          error instanceof Error ? error.message : "Failed to load accounts"
+        }
+      />
+    );
   }
 
   if (!email) {
@@ -58,9 +72,6 @@ export default function AccountsList() {
       </div>
     );
   }
-
-  const pageSize = 10; // show 10 accounts per page
-  const { page, setPage, pageCount, pagedItems: pagedData } = usePagination(data ?? [], pageSize);
 
   return (
     <div className="space-y-5">
@@ -89,8 +100,11 @@ export default function AccountsList() {
             }}
           />
 
-          {/* Pagination controls */}
-          <AccountsPagination page={page} pageCount={pageCount} setPage={setPage} />
+          <AccountsPagination
+            page={page}
+            pageCount={pageCount}
+            setPage={setPage}
+          />
         </>
       )}
 
