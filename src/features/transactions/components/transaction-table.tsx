@@ -1,15 +1,21 @@
 "use client";
 
 import { useState } from "react";
+
 import { useTransactions } from "../hooks/use-transactions";
 import { Transaction, TransactionFilters } from "../types";
+
 import EditTransactionDialog from "./edit-transaction-dialog";
 import DeleteTransactionDialog from "./delete-transaction-dialog";
+
 import { ErrorBox } from "@/components/ErrorBox";
+
 import { TransactionLoading } from "./TransactionLoading";
 import { TransactionEmpty } from "./TransactionEmpty";
 import { TransactionGrid } from "./TransactionGrid";
 import { TransactionPagination } from "./TransactionPagination";
+
+import { usePagination } from "@/lib/usePagination";
 
 interface Props {
   filters?: TransactionFilters;
@@ -18,74 +24,94 @@ interface Props {
 export default function TransactionTable({ filters = {} }: Props) {
   const { data, isLoading, error } = useTransactions();
 
-  const filteredTransactions =
-    (data?.transactions ?? []).filter((transaction) => {
-      const search = filters.search?.toLowerCase();
-      const transactionDate = new Date(transaction.date)
-        .toISOString()
-        .split("T")[0];
+  const [selectedTransaction, setSelectedTransaction] =
+    useState<Transaction | null>(null);
 
-      const matchSearch =
-        !search ||
-        transaction.note?.toLowerCase().includes(search) ||
-        transaction.category?.toLowerCase().includes(search);
+  const [editOpen, setEditOpen] = useState(false);
 
-      const matchType = !filters.type || transaction.type === filters.type;
-      const matchPerson =
-        !filters.person || transaction.person === filters.person;
-      const matchStartDate =
-        !filters.startDate || transactionDate >= filters.startDate;
-      const matchEndDate =
-        !filters.endDate || transactionDate <= filters.endDate;
-      const matchCategory =
-        !filters.category || transaction.category === filters.category;
+  const [deleteTransaction, setDeleteTransaction] =
+    useState<Transaction | null>(null);
 
-      return (
-        matchSearch &&
-        matchType &&
-        matchPerson &&
-        matchCategory &&
-        matchStartDate &&
-        matchEndDate
-      );
-    }) || [];
+  const transactions = data?.transactions ?? [];
+
+  const filteredTransactions = transactions.filter((transaction) => {
+    const search = filters.search?.toLowerCase();
+
+    const transactionDate = new Date(transaction.date)
+      .toISOString()
+      .split("T")[0];
+
+    const matchSearch =
+      !search ||
+      transaction.note?.toLowerCase().includes(search) ||
+      transaction.category?.toLowerCase().includes(search);
+
+    const matchType = !filters.type || transaction.type === filters.type;
+
+    const matchPerson =
+      !filters.person || transaction.person === filters.person;
+
+    const matchStartDate =
+      !filters.startDate || transactionDate >= filters.startDate;
+
+    const matchEndDate = !filters.endDate || transactionDate <= filters.endDate;
+
+    const matchCategory =
+      !filters.category || transaction.category === filters.category;
+
+    return (
+      matchSearch &&
+      matchType &&
+      matchPerson &&
+      matchCategory &&
+      matchStartDate &&
+      matchEndDate
+    );
+  });
 
   const sortedTransactions = [...filteredTransactions].sort((a, b) => {
     switch (filters.sortBy) {
       case "newest":
         return new Date(b.date).getTime() - new Date(a.date).getTime();
+
       case "oldest":
         return new Date(a.date).getTime() - new Date(b.date).getTime();
+
       case "amount_high":
         return b.amount - a.amount;
+
       case "amount_low":
         return a.amount - b.amount;
+
       default:
         return 0;
     }
   });
 
-  const [selectedTransaction, setSelectedTransaction] =
-    useState<Transaction | null>(null);
-  const [editOpen, setEditOpen] = useState(false);
-  const [deleteTransaction, setDeleteTransaction] =
-    useState<Transaction | null>(null);
+  const {
+    page,
+    setPage,
+    pageCount,
+    pagedItems: pagedTransactions,
+  } = usePagination(sortedTransactions, 20);
 
-  // Loading state
-  if (isLoading) return <TransactionLoading />;
-
-  // Error state
-  if (error) {
-    return <ErrorBox message={error.message} />;
+  if (isLoading) {
+    return <TransactionLoading />;
   }
 
-  // Empty state
-  if (!data || data.transactions.length === 0) return <TransactionEmpty />;
+  if (error) {
+    return (
+      <ErrorBox
+        message={
+          error instanceof Error ? error.message : "Failed to load transactions"
+        }
+      />
+    );
+  }
 
-  const [page, setPage] = useState(1);
-  const pageSize = 20;
-  const pageCount = Math.max(1, Math.ceil(sortedTransactions.length / pageSize));
-  const pagedTransactions = sortedTransactions.slice((page - 1) * pageSize, page * pageSize);
+  if (transactions.length === 0) {
+    return <TransactionEmpty />;
+  }
 
   return (
     <div>
@@ -96,9 +122,16 @@ export default function TransactionTable({ filters = {} }: Props) {
             setSelectedTransaction(transaction);
             setEditOpen(true);
           }}
-          onDelete={(transaction) => setDeleteTransaction(transaction)}
+          onDelete={(transaction) => {
+            setDeleteTransaction(transaction);
+          }}
         />
-        <TransactionPagination page={page} pageCount={pageCount} setPage={setPage} />
+
+        <TransactionPagination
+          page={page}
+          pageCount={pageCount}
+          setPage={setPage}
+        />
       </div>
 
       <EditTransactionDialog
@@ -112,10 +145,10 @@ export default function TransactionTable({ filters = {} }: Props) {
 
       <DeleteTransactionDialog
         transaction={deleteTransaction}
-
         open={!!deleteTransaction}
-
-        onClose={() => setDeleteTransaction(null)}
+        onClose={() => {
+          setDeleteTransaction(null);
+        }}
       />
     </div>
   );
