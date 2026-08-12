@@ -16,7 +16,7 @@ async function handleLogin(request: NextRequest) {
     }
     // Deterministic mock user based on email.
     const user = {
-      user_id: 'mock-' + Buffer.from(email).toString('base64'),
+      user_id: Buffer.from(email).toString('base64'),
       name: email.split('@')[0] ?? 'User',
       email,
       avatar: '',

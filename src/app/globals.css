@@ -1,26 +1,400 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
+/* =============================================
+   Theme: Light mode (default)
+   ============================================= */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: hsl(240 10% 97%);
+  --foreground: hsl(240 10% 5%);
+  --card: hsl(0 0% 100%);
+  --card-foreground: hsl(240 10% 5%);
+  --popover: hsl(0 0% 100%);
+  --popover-foreground: hsl(240 10% 5%);
+  --primary: hsl(262 83% 58%);
+  --primary-foreground: hsl(0 0% 100%);
+  --secondary: hsl(240 5% 92%);
+  --secondary-foreground: hsl(240 6% 10%);
+  --muted: hsl(240 5% 92%);
+  --muted-foreground: hsl(240 4% 40%);
+  --accent: hsl(240 5% 92%);
+  --accent-foreground: hsl(240 6% 10%);
+  --destructive: hsl(0 84% 60%);
+  --destructive-foreground: hsl(0 0% 100%);
+  --border: hsl(240 6% 88%);
+  --input: hsl(240 6% 88%);
+  --ring: hsl(262 83% 58%);
+  --radius: 0.75rem;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
+
+  /* Sidebar tokens */
+  --sidebar: hsl(0 0% 100%);
+  --sidebar-foreground: hsl(240 10% 5%);
+  --sidebar-accent: hsl(262 83% 58% / 0.1);
+  --sidebar-accent-foreground: hsl(262 83% 58%);
+  --sidebar-border: hsl(240 6% 88%);
+  --sidebar-ring: hsl(262 83% 58%);
+
+  /* Chart colors */
+  --chart-1: hsl(262 83% 58%);
+  --chart-2: hsl(199 89% 48%);
+  --chart-3: hsl(142 71% 45%);
+  --chart-4: hsl(32 95% 50%);
+  --chart-5: hsl(0 84% 60%);
+
+  /* Glassmorphism tokens */
+  --glass-bg: hsl(0 0% 100% / 0.65);
+  --glass-bg-strong: hsl(0 0% 100% / 0.85);
+  --glass-border: hsl(0 0% 100% / 0.5);
+  --glass-border-strong: hsl(240 6% 88% / 0.6);
+  --glass-shadow: 0 8px 32px hsl(240 10% 5% / 0.06);
+  --glass-shadow-lg: 0 16px 48px hsl(240 10% 5% / 0.08);
+
+  /* Semantic colors */
+  --success: hsl(142 71% 45%);
+  --success-foreground: hsl(0 0% 100%);
+  --warning: hsl(32 95% 50%);
+  --warning-foreground: hsl(0 0% 100%);
+  --income: hsl(142 71% 45%);
+  --income-bg: hsl(142 71% 45% / 0.1);
+  --expense: hsl(0 84% 60%);
+  --expense-bg: hsl(0 84% 60% / 0.1);
+
+  /* Spacing for mobile bottom nav */
+  --bottom-nav-height: 4rem;
+  --header-height: 4rem;
+
+  color-scheme: light;
 }
 
+/* =============================================
+   Theme: Dark mode
+   ============================================= */
+.dark {
+  --background: hsl(240 6% 7%);
+  --foreground: hsl(240 5% 92%);
+  --card: hsl(240 6% 10%);
+  --card-foreground: hsl(240 5% 92%);
+  --popover: hsl(240 6% 10%);
+  --popover-foreground: hsl(240 5% 92%);
+  --primary: hsl(262 83% 62%);
+  --primary-foreground: hsl(0 0% 100%);
+  --secondary: hsl(240 5% 15%);
+  --secondary-foreground: hsl(240 5% 92%);
+  --muted: hsl(240 5% 15%);
+  --muted-foreground: hsl(240 4% 55%);
+  --accent: hsl(240 5% 15%);
+  --accent-foreground: hsl(240 5% 92%);
+  --destructive: hsl(0 72% 51%);
+  --destructive-foreground: hsl(0 0% 100%);
+  --border: hsl(240 5% 18%);
+  --input: hsl(240 5% 18%);
+  --ring: hsl(262 83% 62%);
+
+  /* Sidebar tokens */
+  --sidebar: hsl(240 6% 10%);
+  --sidebar-foreground: hsl(240 5% 92%);
+  --sidebar-accent: hsl(262 83% 62% / 0.15);
+  --sidebar-accent-foreground: hsl(262 83% 62%);
+  --sidebar-border: hsl(240 5% 18%);
+  --sidebar-ring: hsl(262 83% 62%);
+
+  /* Chart colors – slightly brighter for dark bg */
+  --chart-1: hsl(262 83% 65%);
+  --chart-2: hsl(199 89% 52%);
+  --chart-3: hsl(142 71% 48%);
+  --chart-4: hsl(32 95% 53%);
+  --chart-5: hsl(0 72% 51%);
+
+  /* Glassmorphism tokens */
+  --glass-bg: hsl(240 6% 12% / 0.65);
+  --glass-bg-strong: hsl(240 6% 12% / 0.85);
+  --glass-border: hsl(240 5% 25% / 0.4);
+  --glass-border-strong: hsl(240 5% 25% / 0.6);
+  --glass-shadow: 0 8px 32px hsl(0 0% 0% / 0.3);
+  --glass-shadow-lg: 0 16px 48px hsl(0 0% 0% / 0.4);
+
+  /* Semantic colors – adjusted for dark readability */
+  --success: hsl(142 60% 42%);
+  --success-foreground: hsl(0 0% 100%);
+  --warning: hsl(32 90% 48%);
+  --warning-foreground: hsl(0 0% 100%);
+  --income: hsl(142 60% 42%);
+  --income-bg: hsl(142 60% 42% / 0.15);
+  --expense: hsl(0 72% 48%);
+  --expense-bg: hsl(0 72% 48% / 0.15);
+
+  color-scheme: dark;
+}
+
+/* =============================================
+   Tailwind v4 theme bridge
+   Makes CSS variables available as Tailwind utilities
+   ============================================= */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  --color-glass-bg: var(--glass-bg);
+  --color-glass-bg-strong: var(--glass-bg-strong);
+  --color-glass-border: var(--glass-border);
+  --color-glass-border-strong: var(--glass-border-strong);
+
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-income: var(--income);
+  --color-income-bg: var(--income-bg);
+  --color-expense: var(--expense);
+  --color-expense-bg: var(--expense-bg);
+
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* =============================================
+   Base styles
+   ============================================= */
+* {
+  border-color: var(--border);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-figtree), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* =============================================
+   Custom scrollbar
+   ============================================= */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(240 5% 75% / 0.5);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(240 5% 60% / 0.6);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: hsl(240 5% 35% / 0.5);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: hsl(240 5% 45% / 0.6);
+}
+
+/* =============================================
+   Reusable glassmorphism utilities
+   ============================================= */
+
+/* Base glass panel */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+/* Glass card – rounded, with hover lift */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--glass-shadow);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.glass-card:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--glass-shadow-lg);
+  border-color: var(--glass-border-strong);
+}
+
+/* Stronger glass (less transparent) */
+.glass-strong {
+  background: var(--glass-bg-strong);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid var(--glass-border-strong);
+  box-shadow: var(--glass-shadow);
+}
+
+/* Glass hover effect for interactive rows / items */
+.glass-hover {
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.glass-hover:hover {
+  background: var(--glass-bg-strong);
+  border-color: var(--glass-border-strong);
+}
+
+/* Glass surface for headers / fixed bars */
+.glass-surface {
+  background: var(--glass-bg-strong);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-color: var(--glass-border);
+}
+
+/* =============================================
+   Animations
+   ============================================= */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.4s ease-out both;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out both;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.25s ease-out both;
+}
+
+/* Stagger children animation */
+.stagger-children > * {
+  animation: fade-in-up 0.4s ease-out both;
+}
+
+.stagger-children > *:nth-child(1) {
+  animation-delay: 0ms;
+}
+.stagger-children > *:nth-child(2) {
+  animation-delay: 60ms;
+}
+.stagger-children > *:nth-child(3) {
+  animation-delay: 120ms;
+}
+.stagger-children > *:nth-child(4) {
+  animation-delay: 180ms;
+}
+.stagger-children > *:nth-child(5) {
+  animation-delay: 240ms;
+}
+.stagger-children > *:nth-child(6) {
+  animation-delay: 300ms;
+}
+.stagger-children > *:nth-child(7) {
+  animation-delay: 360ms;
+}
+.stagger-children > *:nth-child(8) {
+  animation-delay: 420ms;
+}
+.stagger-children > *:nth-child(9) {
+  animation-delay: 480ms;
+}
+.stagger-children > *:nth-child(10) {
+  animation-delay: 540ms;
+}
+
+/* =============================================
+   Mobile-safe area utilities
+   ============================================= */
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.safe-top {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+/* Hide scrollbar but keep scroll function */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
