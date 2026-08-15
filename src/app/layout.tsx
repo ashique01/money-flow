@@ -11,8 +11,11 @@ const figtree = Figtree({
 });
 
 export const metadata: Metadata = {
-  title: "MoneyFlow",
+  title: "MoneyFlow – Secure Finance",
   description: "Personal finance management system",
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({
