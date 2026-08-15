@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { randomUUID } from 'crypto';
 
 /** Simple mock dispatcher – extend this map to add more mock endpoints */
 const mockHandlers: Record<string, (req: NextRequest) => Promise<NextResponse>> = {
@@ -13,7 +14,9 @@ const mockHandlers: Record<string, (req: NextRequest) => Promise<NextResponse>> 
         email,
         avatar: '',
       };
-      return NextResponse.json({ success: true, data: { authenticated: true, user } }, { status: 200 });
+      const token = randomUUID();
+    const expiresAt = Date.now() + 15 * 60 * 1000;
+    return NextResponse.json({ success: true, data: { authenticated: true, token, expiresAt, user } }, { status: 200 });
     } catch {
       return NextResponse.json({ success: false, message: 'Invalid mock payload' }, { status: 400 });
     }

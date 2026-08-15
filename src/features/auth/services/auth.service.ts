@@ -13,7 +13,8 @@ export interface AuthUser {
 
 export interface LoginResponse {
   authenticated: boolean;
-
+  token: string;
+  expiresAt: number;
   user: AuthUser;
 }
 

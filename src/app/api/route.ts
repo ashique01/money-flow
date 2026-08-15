@@ -2,32 +2,12 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 // Generic API gateway that forwards actions to the Google Apps Script backend.
-// Added special handling for the 'login' action to work in development without the Google script.
+// All actions (including "login") are forwarded to the Google Apps Script backend.
 
 import { GET as googleGET, POST as googlePOST } from './google/route';
 
-// Mock login handler – used when action is 'login'.
-async function handleLogin(request: NextRequest) {
-  try {
-    const body = await request.json();
-    const email = body?.email;
-    if (!email) {
-      return NextResponse.json({ success: false, message: 'Email is required' }, { status: 400 });
-    }
-    // Deterministic mock user based on email.
-    const user = {
-      user_id: Buffer.from(email).toString('base64'),
-      name: email.split('@')[0] ?? 'User',
-      email,
-      avatar: '',
-    };
-    const payload = { authenticated: true, user };
-    return NextResponse.json({ success: true, data: payload }, { status: 200 });
-  } catch (error) {
-    const msg = error instanceof Error ? error.message : 'Unexpected error';
-    return NextResponse.json({ success: false, message: msg }, { status: 500 });
-  }
-}
+// NOTE: Login is now handled by the real Google Apps Script backend.
+// The route simply forwards all actions (including "login") to the Google proxy.
 
 
 export async function GET(request: NextRequest) {
@@ -35,11 +15,7 @@ export async function GET(request: NextRequest) {
   if (!action) {
     return NextResponse.json({ success: false, message: 'Missing action' }, { status: 400 });
   }
-  if (action === 'login') {
-    // Login is POST‑only, but handle GET gracefully.
-    return handleLogin(request);
-  }
-  // Forward all other GET actions to the Google Apps Script proxy.
+  // Forward all GET actions (including "login") to the Google Apps Script proxy.
   return googleGET(request);
 }
 
@@ -48,9 +24,6 @@ export async function POST(request: NextRequest) {
   if (!action) {
     return NextResponse.json({ success: false, message: 'Missing action' }, { status: 400 });
   }
-  if (action === 'login') {
-    return handleLogin(request);
-  }
-  // Forward all other POST actions to the Google Apps Script proxy.
+  // Forward all POST actions (including "login") to the Google Apps Script proxy.
   return googlePOST(request);
 }

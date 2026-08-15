@@ -88,7 +88,8 @@ function loginUser(e) {
     return successResponse({
 
       authenticated: true,
-
+      token: Utilities.getUuid(),
+      expiresAt: new Date().getTime() + 15 * 60 * 1000,
       user: {
 
         user_id: user.user_id,
